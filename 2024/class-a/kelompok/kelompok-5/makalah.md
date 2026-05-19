@@ -243,7 +243,9 @@ Meskipun proses instalasinya dilakukan secara manual, pengguna dapat lebih memah
 ## Daftar Pustaka
 
 https://wiki.archlinux.org/title/Installation_guide
+
 https://wiki.archlinux.org/title/Partitioning#/
+
 https://udaygade.wordpress.com/wp-content/uploads/2015/04/linux-bible-by-christopher-negus.pdf
 
 
