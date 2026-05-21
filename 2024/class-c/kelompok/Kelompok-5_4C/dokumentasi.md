@@ -508,8 +508,6 @@ Contoh: __"Luthfi"__
 
 ### Penjelasan
 __useradd__ adalah nama yang digunakan untuk mengidentifikasi perangkat di jaringan.
-
-
 ---
 
 
@@ -523,6 +521,12 @@ passwd (nama user)
 ### Penjelasan
 Perintah tersebut digunakan untuk mengatur __password__ administrator/root.
 
+---
+# Masuk Mode Root
+
+```bash
+echo "(nama user) ALL=(ALL:ALL) ALL " > /etc/sudoers.d/00_namauser
+```
 
 ---
 
@@ -533,7 +537,7 @@ Langkah berikutnya adalah melakukan instalisasi `Bootloader` atau `GRUB`, GRUB (
 
 Ikuti langkah langkah ini untuk menginstall Bootloader (GRUB):
 ```bash
-pacman -S grub efibootmgr os-plober
+pacman -S grub efibootmgr os-prober
 ```
 
 ```bash
