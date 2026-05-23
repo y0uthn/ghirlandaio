@@ -101,6 +101,8 @@
 ### Langkah 33
 <img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/9d1691f3-a7c6-41de-b458-c368140f9eb7" />
 
+## Bagian Plasma
+---
 ### Langkah 34
 <img width="1600" height="900" alt="image" src="https://github.com/user-attachments/assets/0fee69b2-8534-4931-a239-9d866809db50" />
 
