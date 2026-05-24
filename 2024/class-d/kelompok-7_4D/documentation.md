@@ -260,6 +260,9 @@ passwd
 ```
 echo '[user name] ALL=(ALL:ALL) ALL' >> /etc/sudoers.d/none
 ```
+```
+sudo mount -o rw,nodev,nosuid,relatime /dev/mapper/[nama device] /home/[name]
+```
 
 ## config volume
 ```
