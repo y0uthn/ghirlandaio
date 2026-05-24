@@ -165,3 +165,201 @@ echo "/tmpfs /tmp  tmpfs  defaults,nosuid,nodev,noexec,size=1G  0  0" >> /mnt/et
 ```
 arch-chroot /mnt
 ```
+
+## jika 1 kata tidak perlu pake `""` kalo lebih menggunakan petik `""`
+```
+echo [nama komputer] > /etc/hostname
+```
+
+## LOCALTIME
+```
+ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
+```
+```
+hwclock --systohc
+```
+****
+## LOCALE
+
+```
+nvim /etc/locale.gen
+```
+
+## lalu pencarian di nvim menggunakan `/`
+
+```
+lalu uncommenting kedua en_US
+```
+
+### generate bahasa yg di uncommenting 
+```
+locale-gen
+```
+
+```
+locale > /etc/locale.conf
+```
+
+### config locale
+```
+nvim /etc/locale.conf
+```
+### config file locale 
+```
+isi lang=C menjadi lang=en_US.UTF-8
+dan isi ALL=en_US.UTF-8
+```
+****
+
+# pam_mount
+## USERADD
+```
+mkdir /home/user
+```
+```
+useradd -d  /home/user [user name]
+passwd [user name]
+```
+```
+chown -R [user name]:[user name] /home/user
+```
+```
+passwd
+```
+> password must same like luks for this partition
+
+```
+echo '[user name] ALL=(ALL:ALL) ALL' >> /etc/sudoers.d/none
+```
+
+## config volume
+```
+nvim /etc/security/pam_mount.conf.xml
+```
+> sama kan dengan code yang dibawah
+```
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE pam_mount SYSTEM "pam_mount.conf.xml.dtd">
+<!--
+	See pam_mount.conf(5) for a description.
+-->
+
+<pam_mount>
+
+		<!-- debug should come before everything else,
+		since this file is still processed in a single pass
+		from top-to-bottom -->
+
+<debug enable="0" />
+
+		<!-- Volume definitions -->
+
+
+		<!-- pam_mount parameters: General tunables -->
+
+<!--
+<luserconf name=".pam_mount.conf.xml" />
+-->
+
+<!-- Note that commenting out mntoptions will give you the defaults.
+     You will need to explicitly initialize it with the empty string
+     to reset the defaults to nothing. -->
+<mntoptions allow="nosuid,nodev,loop,encryption,fsck,nonempty,allow_root,allow_other" />
+<!--
+<mntoptions deny="suid,dev" />
+<mntoptions allow="*" />
+<mntoptions deny="*" />
+-->
+<mntoptions require="nosuid,nodev" />
+
+<!-- requires ofl from hxtools to be present -->
+<logout wait="0" hup="no" term="no" kill="no" />
+
+<!-- Example entry for a LUKS partition -->
+<volume 
+    user="[user name]" 
+    fstype="crypt" 
+    path="/dev/proc/[name]" 
+    mountpoint="/home/user]" 
+/>
+		<!-- pam_mount parameters: Volume-related -->
+
+<mkmountpoint enable="1" remove="true" />
+
+
+</pam_mount>
+```
+
+> yang harus diperhatikan pada seluruh config
+```
+<!-- Example entry for a LUKS partition -->
+<volume 
+    user="[user name]" 
+    fstype="crypt" 
+    path="/dev/proc/[user name]" 
+    mountpoint="/home/[user name]" 
+/>
+```
+
+## update konfigurasi pam_mount
+```
+nvim /etc/pam.d/system-login
+```
+
+> sama kan dengan code yang dibawah
+```
+#%PAM-1.0
+
+auth       required   pam_shells.so
+auth       requisite  pam_nologin.so
+auth       include    system-auth
+auth       required   pam_mount.so
+
+account    required   pam_access.so
+account    required   pam_nologin.so
+account    include    system-auth
+
+password   include    system-auth
+
+session    optional   pam_loginuid.so
+session    optional   pam_keyinit.so       force revoke
+session    include    system-auth
+session    optional   pam_lastlog2.so      silent
+session    optional   pam_motd.so
+session    optional   pam_mail.so          dir=/var/spool/mail standard quiet
+session    optional   pam_umask.so
+session    optional  pam_mount.so
+-session   optional   pam_systemd.so
+session    required   pam_env.so
+```
+> untuk memberitahu kepada sistem untuk menggunakan `pam_mount` saat login prosess
+
+## BOOSTER
+```
+nvim /etc/booster.yaml
+```
+
+add value
+```
+network:
+  dhcp: on
+universal: false
+modules: -*,ext4
+extra_files: fsck,fsck.ext4
+strip: true
+enable_lvm: true
+```
+
+```
+cd /boot
+```
+untuk cek kernel
+```
+ls /usr/lib/modules
+```
+```
+booster build --kernel-version <version> /boot/booster-linux-lts-new.img
+```
+```
+rm -fr booster-linux-lts.img
+```
